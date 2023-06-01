@@ -23,14 +23,14 @@ function non_linear_model (force, Tsampling)
     N = m*((acceleration(xdot, xddot, Kt)/M)- ( l*thetadot*thetadot*sin(unit(theta, 'rad')) ) + ( l*thetaddot*cos(unit(theta, 'rad'))) );
     P = m*( (-l*thetadot*thetadot*cos(unit(theta, 'rad')))  - ( l*thetaddot*sin(unit(theta, 'rad')) ) + g );
     thetaddot = ( (((3/m)/l)/l)*(-N*l*cos(unit(theta, 'rad'))) )+ (P*l*sin(unit(theta, 'rad'))) - (d*thetadot);
-   // thetaddot = (d*thetadot);
+    // thetaddot = (d*thetadot);
     xdot += (acceleration(xdot, xddot, Kt)/M)*Tsampling;
     x += xdot*Tsampling;
     thetadot += thetaddot*Tsampling;
     theta += thetadot*Tsampling;
-   // console.log(N);
-   //console.log(P);
-  console.log('Thetaddot: '+ thetaddot +'Thetadot: '+ thetadot +'Theta :'+ theta);
+    // console.log(N);
+    //console.log(P);
+    console.log('Thetaddot: '+ thetaddot +'Thetadot: '+ thetadot +'Theta :'+ theta);
     return [x, xdot, theta, thetadot];
 
 }
