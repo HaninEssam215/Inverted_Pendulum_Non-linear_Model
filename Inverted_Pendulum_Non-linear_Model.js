@@ -1,9 +1,9 @@
-const { abs, cos, sin, sign } = require("mathjs");
+const { abs, cos, sin, sign, unit } = require("mathjs");
 
 var x = 0;
 var xdot = 0;
 var xddot = 0;
-var theta = 0;
+var theta = 0.18;
 var thetadot = 0;
 var thetaddot = 0;
 var N = 0;
@@ -22,14 +22,16 @@ function non_linear_model (force, Tsampling)
     var N = 0;
     var P = 0;
     xddot = force - N - (b*xdot);
-    thetaddot = ( (((3/m)/l)/l)*(-N*l*cos(theta)) )+ (P*l*sin(theta)) - (d*thetadot);
-    N = ( m*((acceleration(xdot, xddot, Kt)/M) )- ( l*thetadot*thetadot*sin(theta) ) + ( l*thetaddot*cos(theta)) );
-    P = ( m*(-l*thetadot*thetadot*cos(theta)) ) - ( l*thetaddot*sin(theta) ) + g;
+    N = m*((acceleration(xdot, xddot, Kt)/M)- ( l*thetadot*thetadot*sin(unit(theta, 'deg')) ) + ( l*thetaddot*cos(unit(theta, 'deg'))) );
+    P = m*((-l*thetadot*thetadot*cos(unit(theta, 'deg')))  - ( l*thetaddot*sin(unit(theta, 'deg')) ) + g);
+    thetaddot = ( (((3/m)/l)/l)*(-N*l*cos(unit(theta, 'deg'))) )+ (P*l*sin(unit(theta, 'deg'))) - (d*thetadot);
     xdot += (acceleration(xdot, xddot, Kt)/M)*Tsampling;
     x += xdot*Tsampling;
     thetadot += thetaddot*Tsampling;
     theta += thetadot*Tsampling;
-    console.log(theta);
+   // console.log(N);
+   //console.log(P);
+   // console.log('Thetaddot: '+ thetaddot +'Thetadot: '+ thetadot +'Theta :'+ theta);
     return [x, xdot, theta, thetadot];
 
 }
@@ -57,7 +59,7 @@ function acceleration(xdot, xddot, Kt)
             }
             else
             {
-                y = xddot + sign(xddot)*-1*3662.9*Kt;
+                y = xddot + (sign(xddot)*-1*3662.9*Kt);
             }
         }
     }
@@ -67,5 +69,6 @@ function acceleration(xdot, xddot, Kt)
 for(var i = 0; i <= 15; i = i+0.005)
 {
     var [position, velocity, angle, angularVelocity] = non_linear_model(10,0.005);
-    //console.log(angle);
+    var y = acceleration(xdot, xddot , Kt);
+    console.log(y);
 }
